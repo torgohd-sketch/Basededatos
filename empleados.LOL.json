@@ -1,0 +1,414 @@
+[{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87df3"
+  },
+  "nombre": "Andrés",
+  "apellido": "Pérez",
+  "edad": 53,
+  "experiencia": 13,
+  "aspiracion_salarial": 13002821,
+  "rol": "operario",
+  "calificacion": 4
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87df4"
+  },
+  "nombre": "Lucía",
+  "apellido": "Gómez",
+  "edad": 47,
+  "experiencia": 10,
+  "aspiracion_salarial": 31507506,
+  "rol": "master",
+  "calificacion": 2,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87df5"
+  },
+  "nombre": "Diego",
+  "apellido": "Hernández",
+  "edad": 59,
+  "experiencia": 26,
+  "aspiracion_salarial": 26179693,
+  "rol": "master",
+  "calificacion": 2,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87df6"
+  },
+  "nombre": "Diego",
+  "apellido": "Vargas",
+  "edad": 68,
+  "experiencia": 10,
+  "aspiracion_salarial": 45901668,
+  "rol": "operario",
+  "calificacion": 4
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87df7"
+  },
+  "nombre": "Sofía",
+  "apellido": "Torres",
+  "edad": 34,
+  "experiencia": 32,
+  "aspiracion_salarial": 32052020,
+  "rol": "master",
+  "calificacion": 2,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87df8"
+  },
+  "nombre": "Camila",
+  "apellido": "López",
+  "edad": 66,
+  "experiencia": 14,
+  "aspiracion_salarial": 52488414,
+  "rol": "master",
+  "calificacion": 3
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87df9"
+  },
+  "nombre": "Luis",
+  "apellido": "López",
+  "edad": 56,
+  "experiencia": 30,
+  "aspiracion_salarial": 24662556,
+  "rol": "operario",
+  "calificacion": 5,
+  "Gestor_convivencia": true
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87dfa"
+  },
+  "nombre": "Lucía",
+  "apellido": "López",
+  "edad": 43,
+  "experiencia": 32,
+  "aspiracion_salarial": 20068760,
+  "rol": "operario",
+  "calificacion": 4
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87dfb"
+  },
+  "nombre": "Laura",
+  "apellido": "Navarro",
+  "edad": 45,
+  "experiencia": 10,
+  "aspiracion_salarial": 22304396,
+  "rol": "operario",
+  "calificacion": 4
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87dfc"
+  },
+  "nombre": "Laura",
+  "apellido": "Ortega",
+  "edad": 59,
+  "experiencia": 17,
+  "aspiracion_salarial": 54100898,
+  "rol": "master",
+  "calificacion": 2,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87dfd"
+  },
+  "nombre": "Carlos",
+  "apellido": "Navarro",
+  "edad": 65,
+  "experiencia": 9,
+  "aspiracion_salarial": 37254499,
+  "rol": "master",
+  "calificacion": 3
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87dfe"
+  },
+  "nombre": "Valentina",
+  "apellido": "Mendoza",
+  "edad": 68,
+  "experiencia": 15,
+  "aspiracion_salarial": 24072281,
+  "rol": "master",
+  "calificacion": 5,
+  "Gestor_convivencia": true
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87dff"
+  },
+  "nombre": "Jorge",
+  "apellido": "Martínez",
+  "edad": 63,
+  "experiencia": 3,
+  "aspiracion_salarial": 50640700,
+  "rol": "operario",
+  "calificacion": 2,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e00"
+  },
+  "nombre": "Valentina",
+  "apellido": "López",
+  "edad": 46,
+  "experiencia": 37,
+  "aspiracion_salarial": 50849334,
+  "rol": "master",
+  "calificacion": 4
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e01"
+  },
+  "nombre": "Juan",
+  "apellido": "Hernández",
+  "edad": 51,
+  "experiencia": 2,
+  "aspiracion_salarial": 56782363,
+  "rol": "master",
+  "calificacion": 1,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e02"
+  },
+  "nombre": "Pedro",
+  "apellido": "Moreno",
+  "edad": 35,
+  "experiencia": 37,
+  "aspiracion_salarial": 30924916,
+  "rol": "operario",
+  "calificacion": 3
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e03"
+  },
+  "nombre": "Jorge",
+  "apellido": "Mendoza",
+  "edad": 47,
+  "experiencia": 14,
+  "aspiracion_salarial": 53869508,
+  "rol": "operario",
+  "calificacion": 5,
+  "Gestor_convivencia": true
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e04"
+  },
+  "nombre": "Carlos",
+  "apellido": "Rojas",
+  "edad": 41,
+  "experiencia": 11,
+  "aspiracion_salarial": 46574036,
+  "rol": "operario",
+  "calificacion": 1,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e05"
+  },
+  "nombre": "Santiago",
+  "apellido": "Navarro",
+  "edad": 66,
+  "experiencia": 11,
+  "aspiracion_salarial": 12710311,
+  "rol": "operario",
+  "calificacion": 4
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e06"
+  },
+  "nombre": "Carlos",
+  "apellido": "Torres",
+  "edad": 67,
+  "experiencia": 37,
+  "aspiracion_salarial": 25099037,
+  "rol": "master",
+  "calificacion": 5,
+  "Gestor_convivencia": true
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e07"
+  },
+  "nombre": "Diego",
+  "apellido": "Pérez",
+  "edad": 64,
+  "experiencia": 31,
+  "aspiracion_salarial": 31446456,
+  "rol": "operario",
+  "calificacion": 2,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e08"
+  },
+  "nombre": "Laura",
+  "apellido": "Silva",
+  "edad": 70,
+  "experiencia": 34,
+  "aspiracion_salarial": 54546804,
+  "rol": "master",
+  "calificacion": 4
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e09"
+  },
+  "nombre": "Valentina",
+  "apellido": "Hernández",
+  "edad": 68,
+  "experiencia": 25,
+  "aspiracion_salarial": 17849925,
+  "rol": "operario",
+  "calificacion": 5,
+  "Gestor_convivencia": true
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e0a"
+  },
+  "nombre": "Sofía",
+  "apellido": "López",
+  "edad": 29,
+  "experiencia": 24,
+  "aspiracion_salarial": 59028560,
+  "rol": "operario",
+  "calificacion": 5,
+  "Gestor_convivencia": true
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e0b"
+  },
+  "nombre": "Jorge",
+  "apellido": "Rojas",
+  "edad": 26,
+  "experiencia": 27,
+  "aspiracion_salarial": 18889938,
+  "rol": "master",
+  "calificacion": 2,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e0c"
+  },
+  "nombre": "Diego",
+  "apellido": "López",
+  "edad": 45,
+  "experiencia": 26,
+  "aspiracion_salarial": 50784446,
+  "rol": "master",
+  "calificacion": 1,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e0d"
+  },
+  "nombre": "Ana",
+  "apellido": "Silva",
+  "edad": 53,
+  "experiencia": 33,
+  "aspiracion_salarial": 37678208,
+  "rol": "operario",
+  "calificacion": 2,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e0e"
+  },
+  "nombre": "Luis",
+  "apellido": "Moreno",
+  "edad": 26,
+  "experiencia": 16,
+  "aspiracion_salarial": 58257942,
+  "rol": "master",
+  "calificacion": 1,
+  "comentario": {
+    "texto": "No trabajo",
+    "hecho_por": "Sofia"
+  }
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e0f"
+  },
+  "nombre": "Lucía",
+  "apellido": "Torres",
+  "edad": 61,
+  "experiencia": 22,
+  "aspiracion_salarial": 5623535,
+  "rol": "master",
+  "calificacion": 3
+},
+{
+  "_id": {
+    "$oid": "68d3f4203dfbf902d4c87e10"
+  },
+  "nombre": "Sofía",
+  "apellido": "Hernández",
+  "edad": 33,
+  "experiencia": 20,
+  "aspiracion_salarial": 5090098,
+  "rol": "master",
+  "calificacion": 3
+}]

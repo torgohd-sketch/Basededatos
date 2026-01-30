@@ -1,0 +1,7 @@
+deep.env
+node_modules/
+dist/
+.vscode/
+.DS_Store
+.env.local
+.env.development.local 

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auditoría de Empleados</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0f172a;
+      margin: 0;
+      padding: 0;
+      color: #60a5fa;
+    }
+
+    header {
+      background-color: #2563eb;
+      color: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h2 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 900px;
+      background: white;
+      margin: 50px auto;
+      padding: 40px 50px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h3 {
+      margin-top: 0;
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .form-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 15px;
+      width: 100%;
+      transition: 0.2s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+    }
+
+    #btnGuardar {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
+      font-weight: 600;
+    }
+
+    #btnGuardar:hover {
+      background-color: #2b7fc0;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .form-group {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h2>Auditoría de Empleados</h2>
+    <p>Bienvenido, <strong><span id="nombreUsuario"></span></strong></p>
+  </header>
+
+  <div class="container">
+    <h3>Actualizar información del empleado</h3>
+    <div class="form-section">
+      <div>
+        <label for="empleadoSelect">Seleccionar Empleado</label>
+        <select id="empleadoSelect"></select>
+      </div>
+
+      <div class="form-group">
+        <div>
+          <label>Nombre</label>
+          <input type="text" id="nombre" placeholder="Nombre">
+        </div>
+        <div>
+          <label>Apellido</label>
+          <input type="text" id="apellido" placeholder="Apellido">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div>
+          <label>Edad</label>
+          <input type="number" id="edad" placeholder="Edad">
+        </div>
+        <div>
+          <label>Aspiración salarial</label>
+          <input type="number" id="aspiracion" placeholder="Aspiración salarial">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div>
+          <label>Calificación</label>
+          <input type="number" id="Calificacion" placeholder="Calificación">
+        </div>
+        <div>
+          <label>Sueldo inicial</label>
+          <input type="number" id="sueldo_inicial" placeholder="Sueldo inicial">
+        </div>
+      </div>
+
+      <div>
+        <label>Sueldo actual</label>
+        <input type="number" id="Sueldo_actual" placeholder="Sueldo actual">
+      </div>
+
+      <button id="btnGuardar">💾 Guardar cambios</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    Sistema de Auditoría © 2025
+  </div>
+
+  <script>
+    const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
+    if (!usuarioActivo) {
+      alert("Debes iniciar sesión primero.");
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("nombreUsuario").textContent =
+        `${usuarioActivo.nombre} ${usuarioActivo.apellido}`;
+    }
+
+    async function cargarEmpleados() {
+      const res = await fetch("http://localhost:3000/api/empleados");
+      const empleados = await res.json();
+      const select = document.getElementById("empleadoSelect");
+
+      empleados.forEach(emp => {
+        const option = document.createElement("option");
+        option.value = emp._id;
+        option.textContent = `${emp.nombre} ${emp.apellido}`;
+        select.appendChild(option);
+      });
+    }
+
+    cargarEmpleados();
+
+    document.getElementById("btnGuardar").addEventListener("click", async () => {
+      const id = document.getElementById("empleadoSelect").value;
+      const nombre = document.getElementById("nombre").value;
+      const apellido = document.getElementById("apellido").value;
+      const edad = document.getElementById("edad").value;
+      const aspiracion = document.getElementById("aspiracion").value;
+      const Calificacion = document.getElementById("Calificacion").value;
+      const sueldo_inicial = document.getElementById("sueldo_inicial").value;
+      const Sueldo_actual = document.getElementById("Sueldo_actual").value;
+
+      if (!id) return alert("Selecciona un empleado primero");
+
+      const nuevosDatos = {
+        nombre,
+        apellido,
+        edad: Number(edad),
+        aspiracion_salarial: Number(aspiracion),
+        editado_por: `${usuarioActivo.nombre} ${usuarioActivo.apellido}`,
+        fecha_ultimo_cambio: new Date(),
+        sueldo_inicial: Number(sueldo_inicial),
+        sueldo_actual: Number(Sueldo_actual),
+        calificacion: Number(Calificacion)
+      };
+
+      const res = await fetch(`http://localhost:3000/api/empleados/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevosDatos)
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert(`✅ ${data.message}`);
+      } else {
+        alert("❌ Error al guardar cambios");
+      }
+    });
+
+    
+  </script>
+</body>
+</html>

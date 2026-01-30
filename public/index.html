@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informe de Empleados - Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+  <style>
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      margin: 0;
+      padding: 0;
+      transition: background 0.4s ease-in-out;
+      animation: fadeInBody 1s ease-in-out;
+    }
+
+    @keyframes fadeInBody {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    header {
+      background: linear-gradient(90deg, #2563eb, #1d4ed8);
+      color: white;
+      text-align: center;
+      padding: 30px 0;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+
+    h2 {
+      text-align: center;
+      color: #60a5fa;
+      margin: 50px 0 30px;
+      font-size: 1.9rem;
+      font-weight: 600;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: #60a5fa;
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+
+    #analizarBtn {
+      background: linear-gradient(to right, #2563eb, #1d4ed8);
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      margin-top: 30px;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    }
+      #Mostrartabla {
+      background: linear-gradient(to right, #2563eb, #1d4ed8);
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      margin-top: 30px;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    }
+     #Mostrartabla:hover {
+      background: linear-gradient(to right, #1e40af, #1d4ed8);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.6);
+    }
+
+
+    #analizarBtn:hover {
+      background: linear-gradient(to right, #1e40af, #1d4ed8);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.6);
+    }
+
+    #exportPdfBtn {
+      margin-left: 10px;
+      margin-top: 30px;
+    }
+
+    #tablaEmpleados {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      animation: fadeInTable 0.8s ease-in-out;
+    }
+
+    @keyframes fadeInTable {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    th, td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid rgba(100, 116, 139, 0.3);
+      transition: background 0.3s ease-in-out;
+    }
+
+    th {
+      background-color: rgba(15, 23, 42, 0.95);
+      color: #93c5fd;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+    }
+
+    tr:hover {
+      background-color: rgba(51, 65, 85, 0.5);
+    }
+
+    .charts {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    canvas {
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      transition: transform 0.4s, box-shadow 0.4s;
+    
+    }
+
+    canvas:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 32px rgba(37, 99, 235, 0.4);
+    }
+
+    .torgo {
+      width:350px !important;
+      height: 200px !important;
+    }
+
+    .hd {
+      width: 350px !important;
+      height: 200px !important;
+    }
+
+    #resultadoIA {
+      margin-top: 30px;
+      text-align: center;
+      font-style: italic;
+      color: #60a5fa;
+      font-size: 1rem;
+      animation: fadeInText 1s ease-in-out;
+    }
+
+    @keyframes fadeInText {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+ .botones-container {
+  display: flex;
+  justify-content: center;  
+  gap: 16px;               
+  margin: 20px 0;           
+}
+.botones button {
+  min-width: 150px;
+}
+
+#mostrar {
+      background: linear-gradient(to right, #2563eb, #1d4ed8);
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      margin-top: 30px;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    #export {
+      background: linear-gradient(to right, #2563eb, #1d4ed8);
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      margin-top: 30px;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    
+    .botonesxd {
+      display: none;
+      gap: 10px;
+    }
+
+    .tabla {
+      display: flex;
+
+    }
+
+    .charts {
+      display: none;
+    }
+
+      
+#exportPdfBtn {
+      background: linear-gradient(to right, #ff0000, hsl(0, 100%, 48%));
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      margin-top: 30px;
+      box-shadow: 0 6px 20px rgba(238, 0, 0, 0.4);
+    }
+
+    .fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.5s forwards;
+}
+
+.fade-out {
+  opacity: 1;
+  transform: translateY(0);
+  animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+#chartCalificaciones {
+  max-width: 300px;   
+  max-height: 300px; 
+  margin: auto;      
+}
+
+main {
+  max-width: 1500px; 
+ margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    #Iniciar_secion {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #720ba9;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+      transition: background 0.3s ease;
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Informe de Empleados - Dashboard</h1>
+  <button id="Iniciar_secion"> Logearse como Editor</button>
+</header>
+
+<section class="botones my-4 d-flex justify-content-center gap-3">
+  <button class="btn btn-primary" id="analizarBtn">Analizar con IA</button>
+  <button class="btn btn-primary" id="mostrar">Mostrar gráficos</button>
+  <div class = "botonesxd">
+  <button class="btn btn-danger" id="exportPdfBtn">Exportar PDF</button>
+  <button class="btn btn-primary" id="Mostrartabla">Volver</button>
+ </div>
+</section>
+
+<div id="resultadoIA"></div>
+
+<main>
+  
+  <div id = "tabla">
+  <table id="tablaEmpleados">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Edad</th>
+        <th>Experiencia</th>
+        <th>Aspiración Salarial</th>
+        <th>Rol</th>
+        <th>Calificación</th>
+        <th>Comentario</th>
+        <th>Gestor Convivencia</th>
+        <th>sueldo inicial</th>
+        <th>sueldo actual</th>
+        <th>fecha de ingreso</th>
+        <th>Ultima Edicion</th>
+        <th>Editado por</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  </div>
+
+  <div class="charts">
+    
+    <canvas class = "xd" id="chartCalificaciones"></canvas>
+    <canvas class="hd" id="chartPromedioSalarial"></canvas>
+      <canvas class="torgo" id="chartRoles"></canvas>
+      <canvas class = "anyelo" id = "chartsueldos"></canvas>
+  </div>
+  
+</main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+  async function init() {
+    try {
+      const res = await fetch('/api/empleados');
+      const data = await res.json();
+
+      
+
+     $('#tablaEmpleados').DataTable( {
+    ajax: {
+        url: '/api/empleados',
+        dataSrc: ''
+    },
+    columns: [
+  { data: 'nombre' },
+  { data: 'apellido' },
+  { data: 'edad' },
+  { data: 'experiencia' },
+  { data: 'aspiracion_salarial', render: $.fn.dataTable.render.number(',', '.', 0, '$') },
+  { data: 'rol' },
+  { data: 'calificacion' },
+  { data: 'comentario.texto', defaultContent: 'Sin comentario' },
+  {
+    data: 'gestor_convivencia',
+    render: function (data, type, row) {
+      if (row.calificacion === 5 && data === true) {
+        return '<span style="color:green; font-weight:bold;">Sí</span>';
+      } else {
+        return '<span style="color:gray;">No</span>';
+      }
+    }
+  },
+  { data: 'sueldo_inicial', render: $.fn.dataTable.render.number(',', '.', 0, '$') },
+  { data: 'sueldo_actual', render: $.fn.dataTable.render.number(',', '.', 0, '$') },
+  { 
+    data: 'fecha_ingreso', 
+    render: function(data) {
+      if (!data) return '';
+      const date = new Date(data);
+      return date.toLocaleDateString();
+    } 
+  },
+  { 
+    data: 'fecha_ultimo_cambio',
+    render: function(data) {
+      if (!data) return '—';
+      const fecha = new Date(data);
+      return fecha.toLocaleString(); // Muestra fecha y hora
+    }
+  },
+  { 
+    data: 'editado_por',
+    defaultContent: '—'
+  }
+],
+    responsive: true,
+    pageLength: 10,
+    lengthMenu: [5, 10, 25, 50]
+} );
+
+
+  
+      const calificaciones = {};
+      const roles = {};
+      data.forEach(emp => {
+        calificaciones[emp.calificacion] = (calificaciones[emp.calificacion] || 0) + 1;
+        roles[emp.rol] = (roles[emp.rol] || 0) + 1;
+      });
+
+const promedioSalarial = {};
+const contador = {};
+
+data.forEach(emp => {
+  const cal = emp.calificacion;
+  promedioSalarial[cal] = (promedioSalarial[cal] || 0) + emp.aspiracion_salarial;
+  contador[cal] = (contador[cal] || 0) + 1;
+});
+
+Object.keys(promedioSalarial).forEach(cal => {
+  promedioSalarial[cal] = promedioSalarial[cal] / contador[cal];
+});
+
+new Chart(document.getElementById('chartCalificaciones').getContext('2d'), {
+  type: 'polarArea', 
+  data: {
+    labels: Object.keys(calificaciones),
+    datasets: [{
+      label: 'Calificaciones',
+      data: Object.values(calificaciones),
+      backgroundColor: [
+        'rgba(75, 123, 236, 0.7)',
+        'rgba(54, 162, 235, 0.7)',
+        'rgba(255, 99, 132, 0.7)',
+        'rgba(255, 206, 86, 0.7)',
+        'rgba(75, 192, 192, 0.7)',
+      ],
+      borderColor: '#fff',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'right' },
+      title: {
+        display: true,
+        text: 'Por Calificaciones',
+        font: { size: 20, weight: 'bold' },
+        padding: { bottom: 20 }
+      }
+    },
+    animation: {
+      duration: 2000,
+      easing: 'easeOutElastic'
+    }
+  }
+});
+
+const ctxRoles = document.getElementById('chartRoles').getContext('2d');
+
+const dataBubble = data.map(emp => ({
+  x: emp.edad,              
+  y: emp.experiencia,         
+  r: emp.rol === 'Master' ? 12 : 8,
+  rol: emp.rol
+}));
+
+new Chart(ctxRoles, {
+  type: 'bubble',
+  data: {
+    datasets: [{
+      label: 'Empleados',
+      data: dataBubble,
+      backgroundColor: dataBubble.map(emp => emp.rol === ' Master' ? 'rgba(54,162,235,0.6)' : 'rgba(255,206,86,0.6)'),
+      borderColor: '#fff',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: ctx => `Edad: ${ctx.raw.x}, Exp: ${ctx.raw.y}, Rol: ${ctx.raw.rol}`
+        }
+      },
+      title: {
+        display: true,
+        text: 'Por rol',
+        font: { size: 20, weight: 'bold' }
+      }
+    },
+    scales: {
+      x: { title: { display: true, text: 'Edad' } },
+      y: { title: { display: true, text: 'Años de experiencia' } }
+    }
+  }
+});
+
+const ctxPromedio = document.getElementById('chartPromedioSalarial').getContext('2d');
+const gradient = ctxPromedio.createLinearGradient(0, 0, 0, 400);
+gradient.addColorStop(0, 'rgba(75, 123, 236, 0.6)');
+gradient.addColorStop(1, 'rgba(75, 123, 236, 0)');
+
+new Chart(ctxPromedio, {
+  type: 'line',
+  data: {
+    labels: Object.keys(promedioSalarial),
+    datasets: [{
+      label: 'Promedio Aspiración Salarial',
+      data: Object.values(promedioSalarial),
+      fill: true,
+      backgroundColor: gradient,
+      borderColor: 'rgba(75, 123, 236, 1)',
+      tension: 0.3, 
+      pointRadius: 5,
+      pointBackgroundColor: '#fff',
+      pointBorderColor: 'rgba(75, 123, 236, 1)'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: 'Por Salario',
+        font: { size: 20, weight: 'bold' }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: { color: 'rgba(255,255,255,0.1)' },
+        title: { display: true, text: 'Salario promedio' }
+      },
+      x: {
+        grid: { color: 'rgba(255,255,255,0.1)' },
+        title: { display: true, text: 'Calificación' }
+      }
+    },
+    animation: {
+      duration: 2000,
+      easing: 'easeInOutQuart'
+    }
+  }
+
+});
+
+
+const total_inicial = data.reduce((sum, e) => sum + (e.sueldo_inicial || 0), 0);
+  const total_actual = data.reduce((sum, e) => sum + (e.sueldo_actual || 0), 0);
+
+  const ctxx = document.getElementById("chartsueldos").getContext("2d");
+
+  new Chart(ctxx, {
+    type: "bar",
+    data: {
+      labels: ["Totales Sueldos"],
+      datasets: [
+        {
+          label: "Sueldo Inicial Total",
+          data: [total_inicial],
+          backgroundColor: "rgba(54, 162, 235, 0.6)",
+          borderColor: "rgba(54, 162, 235, 1)",
+          borderWidth: 1
+        },
+        {
+          label: "Sueldo Actual Total",
+          data: [total_actual],
+          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: "Sueldo Total ($)" }
+        }
+      },
+      plugins: {
+        legend: { position: "top" },
+        title: {
+          display: true,
+          text: "Por fecha"
+        }
+      }
+    }
+  });
+
+
+ } catch (err) {
+      console.error('Error al cargar empleados:', err);
+    }
+  }
+
+
+  init();
+
+  document.getElementById('analizarBtn').addEventListener('click', async () => {
+    try {
+      const resIA = await fetch('/api/analizar-empleados', { method: 'POST' });
+      const data = await resIA.json();
+
+      if (data.success) {
+        localStorage.setItem('analisisIA', data.analysis);
+        window.location.href = '/analisis.html';
+      } else {
+        alert("Error en IA: " + data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error al conectar con la IA");
+    }
+  });
+
+  
+
+
+  document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  async function addChartToPDF(chartId, title, yPos) {
+    const canvas = document.getElementById(chartId);
+    const imgData = canvas.toDataURL('image/png');
+    doc.setFontSize(14);
+    doc.text(title, 15, yPos - 10);
+    doc.addImage(imgData, 'PNG', 15, yPos, 180, 90);
+  }
+
+  let y = 20;
+  await addChartToPDF('chartCalificaciones', 'Gráfico de Calificaciones', y);
+  y += 100;
+  await addChartToPDF('chartRoles', 'Gráfico de Roles', y);
+  y += 100;
+  await addChartToPDF('chartPromedioSalarial', 'Gráfico de Salarios', y);
+
+
+  doc.addPage();
+
+  const table = document.getElementById('tablaEmpleados');
+  let headers = [];
+  let rows = [];
+
+
+  table.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
+
+
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    let row = [];
+    tr.querySelectorAll('td').forEach(td => row.push(td.textContent.trim()));
+    rows.push(row);
+  });
+
+ 
+  doc.autoTable({
+    head: [headers],
+    body: rows,
+    startY: 20,
+    theme: 'grid',
+    styles: { fontSize: 9, cellPadding: 2 },
+    headStyles: { fillColor: [41, 128, 185] }, 
+    alternateRowStyles: { fillColor: [240, 240, 240] }
+  });
+
+  doc.save("dashboard_empleados.pdf");
+});
+
+
+function mostrarConAnimacion(el) {
+  el.classList.remove('fade-out');
+  el.style.display = 'flex'; 
+  el.classList.add('fade-in');
+}
+
+function ocultarConAnimacion(el) {
+  el.classList.remove('fade-in');
+  el.classList.add('fade-out');
+  el.addEventListener('animationend', () => {
+    el.style.display = 'none';
+  }, { once: true });
+}
+
+document.getElementById('mostrar').addEventListener('click', () => {
+  const tabla = document.getElementById('tabla');
+  const charts = document.querySelector('.charts');
+  const botonesxd = document.querySelector('.botonesxd');
+  const Mostrartabla = document.getElementById('Mostrartabla');
+
+  ocultarConAnimacion(tabla);
+  mostrarConAnimacion(charts);
+  mostrarConAnimacion(botonesxd);
+  mostrarConAnimacion(Mostrartabla);
+});
+
+document.getElementById('Mostrartabla').addEventListener('click', () => {
+  const tabla = document.getElementById('tabla');
+  const charts = document.querySelector('.charts');
+  const botonesxd = document.querySelector('.botonesxd');
+  const Mostrartabla = document.getElementById('Mostrartabla');
+
+  ocultarConAnimacion(charts);
+  ocultarConAnimacion(botonesxd);
+  ocultarConAnimacion(Mostrartabla);
+  mostrarConAnimacion(tabla);
+});
+
+const canvas = document.getElementById("chartCalificaciones");
+const canvas2 = document.getElementById("chartPromedioSalarial");
+const canvas3 = document.getElementById("chartRoles");
+const canvas4 = document.getElementById("chartsueldos");
+
+  canvas.style.cursor = "pointer";
+  canvas2.style.cursor = "pointer";
+  canvas3.style.cursor = "pointer";
+  canvas4.style.cursor = "pointer";
+
+  canvas.addEventListener("click", () => {
+   window.open("graficas1.html", "_blank");
+  });
+
+canvas2.addEventListener("click", () => {
+   window.open("graficas2.html", "_blank");
+  });
+
+  canvas3.addEventListener("click", () => {
+    window.open("graficas3.html", "_blank");
+  });
+
+  canvas4.addEventListener("click", () => {
+    window.open("graficas4.html", "_blank");
+  });
+
+  document.getElementById('Iniciar_secion').addEventListener('click', () => {
+    window.location.href = 'login.html';
+  });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graficas Por Calificación</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: linear-gradient(135deg, #0f172a, #1e293b);
+          color: #e2e8f0;
+          margin: 0;
+          padding: 0;
+          transition: background 0.4s ease-in-out;
+          animation: fadeInBody 1s ease-in-out;
+        }
+
+        @keyframes fadeInBody {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        header {
+          background: linear-gradient(90deg, #2563eb, #1d4ed8);
+          color: white;
+          text-align: center;
+          padding: 30px 0;
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+          position: sticky;
+          top: 0;
+          z-index: 10;
+        }
+
+        header h1 {
+          font-size: 2.2rem;
+          font-weight: bold;
+          letter-spacing: 1px;
+        }
+
+        h2 {
+          text-align: center;
+          color: #60a5fa;
+          margin: 50px 0 30px;
+          font-size: 1.9rem;
+          font-weight: 600;
+          position: relative;
+        }
+
+        h2::after {
+          content: '';
+          display: block;
+          width: 60px;
+          height: 4px;
+          background: #60a5fa;
+          margin: 12px auto 0;
+          border-radius: 2px;
+        }
+
+       
+
+        .fade-in {
+          opacity: 0;
+          transform: translateY(20px);
+          animation: fadeIn 0.5s forwards;
+        }
+
+        .fade-out {
+          opacity: 1;
+          transform: translateY(0);
+          animation: fadeOut 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+          to { opacity: 0; transform: translateY(20px); }
+        }
+
+        #exportPdfBtn {
+          background: linear-gradient(to right, #ff0000, hsl(0, 100%, 48%));
+          color: white;
+          padding: 12px 30px;
+          border: none;
+          border-radius: 10px;
+          font-weight: 600;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: all 0.4s ease;
+          margin-top: 30px;
+          box-shadow: 0 6px 20px rgba(238, 0, 0, 0.4);
+        }
+
+        #mostrar, #volver {
+          background: linear-gradient(to right, #2563eb, #1d4ed8);
+          color: white;
+          padding: 12px 30px;
+          border: none;
+          border-radius: 10px;
+          font-weight: 600;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: all 0.4s ease;
+          margin-top: 30px;
+          box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        #volver {
+          display: none;
+          background: linear-gradient(to right, #10b981, #059669);
+        }
+        
+    
+
+        #graficoDistribucion{
+          width: 450px !important;
+          height: 400px !important; 
+        }
+    #graficoDispersion{
+          width: 450px !important;
+          height: 400px !important; 
+        }
+        #graficoPorRol {
+          width: 450px !important;
+          height: 400px !important; 
+        }
+
+        #graficoPorCalificacion {
+          width: 450px !important;
+          height: 400px !important; 
+        }
+
+  canvas {
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+
+    canvas:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 32px rgba(37, 99, 235, 0.4);
+    }
+
+    .creargrafico {
+     display: none;
+    }
+
+    </style>
+</head>
+<body>
+  <header>
+    <h1>Gráficas Por Rol</h1>
+  </header>
+
+  <h2>Aquí podrás ver gráficos en base a los roles</h2>
+
+  <section class="botones my-4 d-flex justify-content-center gap-3">
+    <button class="btn btn-primary" id="mostrar">Crear Gráfico</button>
+    <button class="btn btn-danger" id="exportPdfBtn">Exportar PDF</button>
+    <button class="btn btn-success" id="volver">Volver</button>
+  </section>
+
+ <div id="graficos" class="container my-5">
+  <div class="row gy-5 justify-content-center align-items-center text-center">
+
+    
+    <div class="col-12 col-md-10 d-md-flex align-items-center justify-content-between gap-4">
+      <div class="col-md-6 mx-auto">
+        <canvas id="graficoDistribucion"></canvas>
+      </div>
+      <div class="col-md-5 text-start text-light">
+        <h4>Distribución de Roles</h4>
+        <p>
+          Este gráfico muestra la proporción de empleados según su rol.
+    
+        </p>
+      </div>
+    </div>
+
+    
+    <div class="col-12 col-md-10 d-md-flex align-items-center justify-content-between gap-4">
+      <div class="col-md-6 mx-auto">
+        <canvas id="graficoDispersion"></canvas>
+      </div>
+      <div class="col-md-5 text-start text-light">
+        <h4>Relación entre Experiencia y rol</h4>
+        <p>
+          Este diagrama de dispersión permite observar si existe una relación entre los años de experiencia
+          y su rol en la empresa obtenida por cada empleado, ayudando a detectar patrones de desempeño.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-10 d-md-flex align-items-center justify-content-between gap-4">
+      <div class="col-md-6 mx-auto">
+        <canvas id="graficoPorRol"></canvas>
+      </div>
+      <div class="col-md-5 text-start text-light">
+        <h4>Promedio de experiencia por Rol</h4>
+        <p>
+          Muestra el promedio de experiencia agrupado por rol o cargo dentro de la organización.
+          Es útil para detectar qué áreas presentan mejor o peor desempeño general.
+        </p>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+<section class="creargrafico">
+  <div class="container text-center my-5">
+    <div class="row justify-content-center">
+      <div class="col-10 col-md-6 col-lg-4">
+        <h4 class="mb-4">Generar gráfico según calificación</h4>
+
+
+        <select id="ejeX" class="form-select form-select-lg mb-3">
+          <option selected disabled>Selecciona variable para eje X</option>
+          <option value="calificacion">calificacion</option>
+          <option value="experiencia">Experiencia</option>
+          <option value="edad">Edad</option>
+          <option value="sueldo_actual">Sueldo actual</option>
+        </select>
+
+        <select id="operacion" class="form-select form-select-lg mb-3">
+          <option selected disabled>Operación a aplicar</option>
+          <option value="suma">Suma</option>
+          <option value="promedio">Promedio</option>
+          <option value="comparacion">Comparación</option>
+        </select>
+
+        <select id="tipoGrafico" class="form-select form-select-lg mb-3">
+          <option selected disabled>Selecciona tipo de gráfico</option>
+          <option value="bar">Barras</option>
+          <option value="line">Líneas</option>
+          <option value="pie">Pastel</option>
+          <option value="radar">Radar</option>
+        </select>
+
+        <button id="btnGenerar" class="btn btn-primary mt-3 w-100">Generar Gráfico</button>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mt-5">
+      <div class="col-12 col-md-8">
+        <canvas id="graficoPersonalizado"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+async function init() {
+  try {
+    const res = await fetch('/api/empleados');
+    const data = await res.json();
+
+   const roleColors = {
+  "Operario": "#3b82f6",
+  "Master": "#22c55e",
+
+};
+
+
+const rolesSet = Array.from(new Set(data.map(d => d.rol)));
+const roles = rolesSet.sort(); 
+
+const distribucion = {};
+data.forEach(e => {
+  const r = e.rol || "Sin rol";
+  distribucion[r] = (distribucion[r] || 0) + 1;
+});
+const labelsDistrib = Object.keys(distribucion);
+const valoresDistrib = Object.values(distribucion);
+const coloresDistrib = labelsDistrib.map(l => roleColors[l] || '#64748b');
+
+new Chart(document.getElementById("graficoDistribucion"), {
+  type: 'pie',
+  data: {
+    labels: labelsDistrib,
+    datasets: [{
+      data: valoresDistrib,
+      backgroundColor: coloresDistrib,
+      borderColor: '#0b1220',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top', labels: { color: '#e2e8f0' } },
+      title: { display: true, text: 'Distribución de Roles', color: '#e2e8f0', font: { size: 18 } },
+      tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.formattedValue} (${Math.round(ctx.raw / valoresDistrib.reduce((a,b)=>a+b,0)*100)}%)` } }
+    }
+  }
+});
+
+
+const rolMap = {};
+roles.forEach((r, i) => rolMap[r] = i + 1); // 1..N
+
+const Empleados = data.map(e => {
+  const baseY = rolMap[e.rol] || 0;
+ 
+  const jitter = (Math.random() - 0.5) * 0.18;
+  return {
+    x: Number(e.experiencia) || 0,
+    y: baseY + jitter,
+    label: e.nombre || '',
+    rol: e.rol || ''
+  };
+});
+
+
+const scatterDatasets = roles.map(r => ({
+  label: r,
+  data: Empleados.filter(p => p.rol === r),
+  backgroundColor: roleColors[r] || '#60a5fa',
+  pointRadius: 6,
+  pointHoverRadius: 9
+}));
+
+new Chart(document.getElementById("graficoDispersion"), {
+  type: 'scatter',
+  data: { datasets: scatterDatasets },
+  options: {
+    responsive: true,
+    scales: {
+      x: {
+        title: { display: true, text: 'Experiencia (años)', color: '#cbd5e1' },
+        ticks: { color: '#94a3b8' },
+        grid: { color: 'rgba(255,255,255,0.06)' }
+      },
+      y: {
+        title: { display: true, text: 'Rol', color: '#cbd5e1' },
+        ticks: {
+          color: '#e2e8f0',
+          stepSize: 1,
+          callback: v => roles[v - 1] || ''
+        },
+        min: 0.5,
+        max: roles.length + 0.5,
+        grid: { color: 'rgba(255,255,255,0.06)' }
+      }
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.raw.label || '—'} — ${ctx.dataset.label} (${ctx.raw.x} años)`
+        }
+      },
+      title: { display: true, text: 'Experiencia individual por Rol', color: '#e2e8f0', font: { size: 18 } },
+      legend: { position: 'top', labels: { color: '#e2e8f0' } }
+    }
+  }
+});
+
+
+const gruposExp = {};
+data.forEach(e => {
+  const r = e.rol || "Sin rol";
+  gruposExp[r] = gruposExp[r] || [];
+  gruposExp[r].push(Number(e.experiencia) || 0);
+});
+const rolesProm = Object.keys(gruposExp);
+const promedios = rolesProm.map(r => {
+  const arr = gruposExp[r];
+  const avg = arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+  return Number(avg.toFixed(1));
+});
+const coloresProm = rolesProm.map(r => roleColors[r] || '#818cf8');
+
+new Chart(document.getElementById("graficoPorRol"), {
+  type: 'bar',
+  data: {
+    labels: rolesProm,
+    datasets: [{
+      label: 'Promedio de experiencia (años)',
+      data: promedios,
+      backgroundColor: coloresProm,
+      borderRadius: 8
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    scales: {
+      x: {
+        beginAtZero: true,
+        title: { display: true, text: 'Años (promedio)', color: '#cbd5e1' },
+        ticks: { color: '#94a3b8' },
+        grid: { color: 'rgba(255,255,255,0.06)' }
+      },
+      y: {
+        ticks: { color: '#e2e8f0' },
+        grid: { display: false }
+      }
+    },
+    plugins: {
+      title: { display: true, text: 'Promedio de experiencia por Rol', color: '#e2e8f0', font: { size: 18 } },
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${ctx.formattedValue} años` } }
+    }
+  }
+});
+
+const resumenRol = {};
+data.forEach(e => {
+  if (!resumenRol[e.rol]) resumenRol[e.rol] = { total: 0, sumaExp: 0 };
+  resumenRol[e.rol].total++;
+  resumenRol[e.rol].sumaExp += e.experiencia;
+});
+
+
+ let chart;
+
+
+const selectOperacion = document.getElementById("operacion");
+const selectTipoGrafico = document.getElementById("tipoGrafico");
+
+selectOperacion.addEventListener("change", () => {
+  const operacion = selectOperacion.value;
+
+  selectTipoGrafico.innerHTML = '<option selected disabled>Selecciona tipo de gráfico</option>';
+
+  let tiposDisponibles;
+  if (operacion === "comparacion") {
+    tiposDisponibles = ["bar", "line"]; 
+  } else {
+    tiposDisponibles = ["bar", "line", "pie", "radar"];
+  }
+
+  tiposDisponibles.forEach(tipo => {
+    const option = document.createElement("option");
+    option.value = tipo;
+    option.textContent = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+    selectTipoGrafico.appendChild(option);
+  });
+});
+
+document.getElementById("btnGenerar").addEventListener("click", () => {
+  const ejeX = document.getElementById("ejeX").value;
+  const operacion = document.getElementById("operacion").value;
+  const tipoGrafico = document.getElementById("tipoGrafico").value;
+
+  if (!ejeX || !operacion || !tipoGrafico) {
+    alert("Selecciona todas las opciones antes de generar el gráfico");
+    return;
+  }
+
+
+  const gruposRol = {};
+  data.forEach(e => {
+    if (!gruposRol[e.rol]) gruposRol[e.rol] = [];
+    gruposRol[e.rol].push(e);
+  });
+
+
+  if (ejeX === "calificacion") {
+    const calificaciones = [1, 2, 3, 4, 5];
+    const rolesUnicos = [...new Set(data.map(e => e.rol))];
+
+    const datasets = rolesUnicos.map(rol => ({
+      label: rol,
+      data: calificaciones.map(c => data.filter(e => e.rol === rol && e.calificacion === c).length),
+      backgroundColor: `hsl(${Math.random() * 360}, 70%, 60%)`
+    }));
+
+    crearGrafico("bar", calificaciones.map(c => `Calificación ${c}`), datasets, "Cantidad de empleados por calificación y rol");
+    return;
+  }
+
+  const etiquetas = Object.keys(gruposRol);
+
+  if (operacion === "comparacion") {
+   
+    const promedios = etiquetas.map(rol => {
+      const grupo = gruposRol[rol];
+      const valores = grupo.map(e => e[ejeX]);
+      return valores.reduce((a, b) => a + b, 0) / valores.length;
+    });
+
+    const maximos = etiquetas.map(rol =>
+      Math.max(...gruposRol[rol].map(e => e[ejeX]))
+    );
+
+    const datasets = [
+      {
+        label: `Promedio de ${ejeX}`,
+        data: promedios,
+        backgroundColor: tipoGrafico === "bar" ? "#42A5F5" : undefined,
+        borderColor: "#42A5F5",
+        borderWidth: 2,
+        fill: false,
+      },
+      {
+        label: `Máximo de ${ejeX}`,
+        data: maximos,
+        backgroundColor: tipoGrafico === "bar" ? "#FFA726" : undefined,
+        borderColor: "#FB8C00",
+        borderWidth: 2,
+        fill: false,
+      },
+    ];
+
+    crearGrafico(tipoGrafico, etiquetas, datasets, `Comparación de ${ejeX} por rol`);
+    return;
+  }
+
+
+  const valores = etiquetas.map(rol => {
+    const grupo = gruposRol[rol];
+    if (operacion === "suma") {
+      return grupo.reduce((sum, e) => sum + (e[ejeX] || 0), 0);
+    } else if (operacion === "promedio") {
+      return grupo.reduce((sum, e) => sum + (e[ejeX] || 0), 0) / grupo.length;
+    }
+  });
+
+  const dataset = [{
+    label: `${operacion.toUpperCase()} de ${ejeX} por rol`,
+    data: valores,
+    backgroundColor: '#42A5F5',
+    borderColor: '#1E88E5',
+    borderWidth: 2,
+  }];
+
+  crearGrafico(tipoGrafico, etiquetas, dataset, `${operacion} de ${ejeX} por rol`);
+});
+
+function crearGrafico(tipo, etiquetas, datasets, titulo = "") {
+  const ctx = document.getElementById("graficoPersonalizado").getContext("2d");
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: tipo,
+    data: { labels: etiquetas, datasets: datasets },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "top" },
+        title: {
+          display: true,
+          text: titulo || "Gráfico generado",
+          font: { size: 18 }
+        }
+      },
+      scales: tipo !== "pie" && tipo !== "radar" ? {
+        y: { beginAtZero: true }
+      } : {}
+    }
+  });
+}
+  } catch (err) {
+    console.error('Error al cargar empleados:', err);
+  }
+}
+
+init();
+
+const btnMostrar = document.getElementById('mostrar');
+const btnVolver = document.getElementById('volver');
+const seccionGraficos = document.getElementById('graficos');
+const seccionCrear = document.querySelector('.creargrafico');
+seccionGraficos.style.display = 'flex';
+
+btnMostrar.addEventListener('click', () => {
+
+  seccionGraficos.classList.remove('fade-in');
+  seccionGraficos.classList.add('fade-out');
+  setTimeout(() => {
+    seccionGraficos.style.display = 'none';
+    btnMostrar.style.display = 'none';
+    btnVolver.style.display = 'inline-block';
+    seccionCrear.style.display = 'block';
+  }, 500);
+});
+
+btnVolver.addEventListener('click', () => {
+  seccionGraficos.classList.remove('fade-out');
+  seccionGraficos.style.display = 'flex';
+  seccionGraficos.classList.add('fade-in');
+  btnVolver.style.display = 'none';
+  btnMostrar.style.display = 'inline-block';
+    seccionCrear.style.display = 'none';
+});
+
+document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+
+  async function addChartToPDF(chartId, title, yPos) {
+    const canvas = document.getElementById(chartId);
+    if (!canvas || canvas.offsetParent === null) return; 
+    const imgData = canvas.toDataURL('image/png', 1.0);
+    doc.setFontSize(14);
+    doc.text(title, 15, yPos - 8);
+    doc.addImage(imgData, 'PNG', 15, yPos, 180, 90);
+  }
+
+
+
+  const graficosPrincipales = [
+    'graficoDistribucion',
+    'graficoDispersion',
+    'graficoPorRol',
+    'graficoPorCalificacion'
+  ];
+
+  const algunoVisible = graficosPrincipales.some(id => {
+    const el = document.getElementById(id);
+    return el && el.offsetParent !== null;
+  });
+
+  let y = 20;
+
+  if (algunoVisible) {
+    for (const id of graficosPrincipales) {
+      const el = document.getElementById(id);
+      if (el && el.offsetParent !== null) {
+        const titulo = {
+          graficoDistribucion: 'Distribución de Calificaciones',
+          graficoDispersion: 'Relación Experiencia vs Calificación',
+          graficoPorRol: 'Promedio de Calificación por Rol',
+          graficoPorCalificacion: 'Cantidad de Empleados por Calificación'
+        }[id];
+        await addChartToPDF(id, titulo, y);
+        y += 100;
+        if (y > 240) {
+          doc.addPage();
+          y = 20;
+        }
+      }
+    }
+  } else {
+
+    const customCharts = ['graficoPersonalizado', 'graficoSalarios'];
+    for (const id of customCharts) {
+      const el = document.getElementById(id);
+      if (el && el.offsetParent !== null) {
+        await addChartToPDF(id, 'Gráfico Personalizado', y);
+      }
+    }
+  }
+
+
+  doc.save('graficas_calificacion.pdf');
+});
+
+  
+
+
+</script>
+</body>
+</html>
