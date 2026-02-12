@@ -325,25 +325,18 @@ Compatible con:
 
 ---
 
-## 👥 Autores
+## 👥 Autor
 
 <div align="center">
 
 | Developer | GitHub |
 |-----------|--------|
-| **Angel0zzx** | [@Angel0zzx](https://github.com/Angel0zzx) |
 | **torgohd** | [@torgohd-sketch](https://github.com/torgohd-sketch) |
-| **Julianzzx** | [@Julianzzx](https://github.com/Julianzzx) |
 
 </div>
 
 ---
 
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT.
-
----
 
 <div align="center">
 
